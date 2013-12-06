@@ -1,0 +1,95 @@
+.blog-header{
+  position: relative;
+  border-bottom: 1px dotted @medgrey;
+  h3{
+    width: auto;
+    background: @orange;
+    padding: 1rem 2rem 1.5rem;
+    color: @white;
+    .border-radius(12px);
+    font-size: 3rem;
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+  h3:after{
+    content: "";
+    width: 0; 
+    height: 0; 
+    border-left: 2rem solid transparent;
+    border-right: 0rem solid transparent;
+    border-top: 2rem solid @orange;
+    position: absolute;
+    display: block;
+    top: 6rem;
+    left: 5rem;
+  }
+  p{
+    margin: 1em 0;
+  }
+}
+
+/*custom Font*/
+@font-face {
+  font-family: "infinitive";
+  src:url("../infinitive-icon-font/fonts/infinitive.eot");
+  src:url("../infinitive-icon-font/fonts/infinitive.eot?#iefix") format("embedded-opentype"),
+    url("../infinitive-icon-font/fonts/infinitive.ttf") format("truetype"),
+    url("../infinitive-icon-font/fonts/infinitive.svg#infinitive") format("svg"),
+    url("../infinitive-icon-font/fonts/infinitive.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+ 
+[data-icon]:before {
+  font-family: "infinitive" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  text-transform: none !important;
+}
+ 
+[class^="icon-"] i,
+[class*=" icon-"] i {
+  display: inline-block;
+  float: left;
+  font-size: 2em;
+  margin: 0.2em 0.5rem;
+}
+[class^="icon-"] i:before,
+[class*=" icon-"] i:before {
+  font-family: "infinitive" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  text-transform: none !important;
+} 
+ 
+.icon-enterprise i:before {
+   content: "a"; 
+} 
+ 
+.icon-intelligence i:before {
+   content: "b"; 
+} 
+ 
+.icon-risk i:before {
+   content: "c"; 
+} 
+ 
+.icon-solutions i:before {
+   content: "d"; 
+}
