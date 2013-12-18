@@ -82,9 +82,13 @@ blockquote::before {
 blockquote {
   margin: 40px 40px 24px;
   margin: 4rem 4rem 2.4rem;
+  border: none;
+  p{
+    .customsanserif;
+  }
 }
 
-blockquote::before {
+/*blockquote::before {
   content: "\201C";
   display: block;
   font-size: 30px;
@@ -93,7 +97,7 @@ blockquote::before {
   left: -20px;
   position: relative;
   top: -10px;
-}
+}*/
 
 .entry-content code {
   background-color: @dkgrey;
