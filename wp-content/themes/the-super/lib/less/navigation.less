@@ -4,7 +4,7 @@ Site Navigation
 
 .genesis-nav-menu {
   clear: both;
-  color: @dkgrey;
+  color: @blue;
   .customsanserif;
   line-height: 1.5;
   width: 100%;
@@ -13,7 +13,7 @@ Site Navigation
     text-align: left;
     a {
       border: none;
-      color: @dkgrey;
+      color: @blue;
       display: block;
       padding: 28px 24px;
       padding: 2rem 2.2rem;
@@ -21,7 +21,6 @@ Site Navigation
     }
     a:hover{
      color: @orange;
-     text-decoration: none;
     }
    }
    .current-menu-item>a{
@@ -30,7 +29,6 @@ Site Navigation
 }
 
 .genesis-nav-menu > .menu-item > a {
-  text-transform: uppercase;
 }
 
 .genesis-nav-menu .sub-menu {
@@ -70,11 +68,11 @@ Site Navigation
   opacity: 1;
 }
 
-.genesis-nav-menu > .first > a {
+.genesis-nav-menu > .first-child > a {
   padding-left: 0;
 }
 
-.genesis-nav-menu > .last > a {
+.genesis-nav-menu > .last-child > a {
   padding-right: 0;
 }
 
@@ -117,101 +115,29 @@ Site Navigation
 --------------------------------------------- */
 
 .nav-primary {
-  background-color: @white;
   display: inline-block;
+  float: right;
+  margin-top: 2rem;
   li.menu-item{
-    a{}
+    a{
+      color: @blue;
+      text-transform: uppercase;
+    }
     .sub-menu{
       border: none;
       li.menu-item{
         a{
           background: darken(@dkgrey,20%);
           border: none;
-          color: white;
+          color: @orange;
         }
       }
     }
   }
   li:hover, li.current-menu-item, li.current-menu-ancestor{
-    background: darken(@dkgrey,20%);
-    a, a:hover{color:@white}
+    a, a:hover{color:@orange}
   }
 }
-
-
-/* Infinitive For You Navigation */
-#menu-primary-links>li.first-child{
-    ul,li{
-      display: block;
-      visibility: visible;
-    }
-    ul.sub-menu{
-      background: darken(@dkgrey,20%);
-    }
-    >ul.sub-menu{
-      min-height: 280px;
-      a{width: auto;}
-      >li{
-        position: relative;
-      }
-      >li>ul.sub-menu{
-        left: 199px;
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        top: 0px;
-        height: 280px;
-        font-size: 1em;
-        width: 484px;
-        >li{
-          width: 120px;
-          display: inline-block;
-          float: left;
-          position: relative;
-          opacity: 1;
-          top: 0;
-          left: 0;
-          padding: 3px 10px;
-          margin: 0;
-          font-family: 'News Cycle', Helvetica, "Helvetica Neue", Arial, sans-serif;
-          text-transform: uppercase;
-          >a{
-            padding-top: 2px;
-            padding-bottom: 2px;
-          }
-          >ul{
-            margin: 0;
-            padding: 0;
-            opacity: 1;
-            left: 0;
-            border-top: 1px solid #B8B7B9;
-            background: none;
-            width: 120px;
-            display: block;
-            line-height: 1.2em;
-            >li{
-              text-transform: none;
-              width: 120px;
-              padding: 3px 0;
-              opacity: 1;
-              top: 0;
-              left: 0;
-              >a{
-                padding-top: 2px;
-                padding-bottom: 2px;
-                font-size: 1em;
-                font-size: 1rem;
-              }
-            }
-          }
-        }
-      }
-      li.title>ul.sub-menu{
-        height: 227px;
-        width: 604px;
-      }
-    }
-  }
 .mainNav>ul>li.first>ul>li.title>ul>li>ul>li {
   padding: 3px 0;
 }
@@ -221,24 +147,20 @@ Site Navigation
 --------------------------------------------- */
 
 .nav-secondary {
-  background-color: @dkgrey;
-  color: @white;
   padding: 0.5rem 0;
   .wrap{
     li.menu-item{
-      width:24.7%;
-      border-right: 1px solid @white;
+      width:auto;
       >a{
         font-size: 0.8em;
         line-height: 1.2em;
-        padding: 0.5rem 5rem;
-        color: @ltgrey;
+        padding: 0.5rem 1rem;
+        color: @medgrey;
       }
       >a:hover{
-        color:white;
+        color:@orange;
       }
       ul.sub-menu{
-        width: 100%;
         position:absolute;
         background:@ltgrey;
         text-align: center;

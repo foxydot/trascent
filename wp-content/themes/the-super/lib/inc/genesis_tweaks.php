@@ -15,7 +15,11 @@ add_action('genesis_before_header','msdlab_pre_header');
  */
 remove_action( 'genesis_after_header', 'genesis_do_nav' );
 add_action( 'genesis_header', 'genesis_do_nav' );
-
+/**
+ * Move secodary nav into pre-header
+ */
+remove_action( 'genesis_after_header', 'genesis_do_subnav' );
+add_action( 'msdlab_pre_header', 'genesis_do_subnav' );
 
 //*** SIDEBARS ***/
 //add_action('genesis_before', 'msdlab_ro_layout_logic'); //This ensures that the primary sidebar is always to the left.
@@ -35,7 +39,7 @@ add_action( 'genesis_before_post', 'msdlab_post_image', 8 ); //add feature image
 add_action('template_redirect','msdlab_blog_grid');
  
 /*** FOOTER ***/
-add_theme_support( 'genesis-footer-widgets', 1 ); //adds automatic footer widgets
+//add_theme_support( 'genesis-footer-widgets', 1 ); //adds automatic footer widgets
 
 remove_action('genesis_footer','genesis_do_footer'); //replace the footer
 add_action('genesis_footer','msdlab_do_social_footer');//with a msdsocial support one

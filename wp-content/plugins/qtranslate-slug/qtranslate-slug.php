@@ -3,7 +3,7 @@
 Plugin Name: qTranslate slug
 Plugin URI: http://not-only-code.github.com/qtranslate-slug/
 Description: Allows to define a slug for each language and some qTranslate bug fixes
-Version: 1.1
+Version: 1.1.5
 Author: Carlos Sanz Garcia
 Author URI: http://github.com/not-only-code
 */
@@ -29,6 +29,8 @@ function _debug( $message ) {
 }
 endif;
 ////////////////////////////////////////////////////////////////////////////////////////
+
+// testing push from cloned repo
 
 
 /**
@@ -367,7 +369,6 @@ class QtranslateSlug {
 		echo "<p><strong>Qtranslate Slug:</strong></p>" . PHP_EOL;
 		echo "<p>" . __('This plugin requires at least <strong>Wordpress 3.3</strong> and <strong>Qtranslate(2.5.8 or newer)</strong>', 'qts') . "</p>" . PHP_EOL;
 	    echo "</div>" . PHP_EOL;
-
 	}
 	
 	
@@ -615,10 +616,13 @@ class QtranslateSlug {
 		
 		if ( empty($this->permalink_structure) || $q_config['url_mode'] == 1 ) 
 			$base_args['lang'] = $this->get_lang();
-		
+
 		// rebulid query with all args
 		$url = add_query_arg($base_args, $url);
-		
+
+		$url = str_replace('/?', '?', $url); // hack: improve this code
+		$url = str_replace('?', '/?', $url); // hack: improve this code
+
 		return $url;
 	}
 	
@@ -756,7 +760,7 @@ class QtranslateSlug {
 			}
 		}
 
-		return $wp->public_query_vars;
+		return count(array_diff($query_vars, $wp->public_query_vars)) > 0 ? $query_vars : $wp->public_query_vars;
 	}
 	
 	
@@ -1293,16 +1297,18 @@ class QtranslateSlug {
 	public function _get_page_link( $link, $id ) {
 		global $post, $wp_rewrite, $q_config;
 
+		$current_post = $post;
+
 		if ( !$id )
 			$id = (int) $post->ID;
 		else
-			$post = &get_post($id);
+			$current_post = &get_post($id);
 
-		$draft_or_pending = in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
+		$draft_or_pending = in_array( $current_post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 
 		$link = $wp_rewrite->get_page_permastruct();
 
-		if ( !empty($link) && ( isset($post->post_status) && !$draft_or_pending ) ) {
+		if ( !empty($link) && ( isset($current_post->post_status) && !$draft_or_pending ) ) {
 			
 			$link = str_replace('%pagename%', $this->get_page_uri($id), $link);
 			
@@ -1842,27 +1848,38 @@ class QtranslateSlug {
 	public function unique_term_slug($slug, $term, $lang) {
 		global $wpdb;
 		
-		$meta_key_name = $this->get_meta_key($lang);
-		$query = "SELECT term_id FROM $wpdb->termmeta WHERE meta_key = '$meta_key_name' AND meta_value = '$slug' AND term_id != $term->term_id ";
-		$exists_slug = $wpdb->get_results($query);
-		
-		if ( empty($exists_slug) )
-			return $slug;
-		
-		// If we didn't get a unique slug, try appending a number to make it unique.
-		$query = $wpdb->prepare( "SELECT meta_value FROM $wpdb->termmeta WHERE meta_key = '$meta_key_name' AND meta_value = '$slug' AND term_id != $term->term_id");
+        $meta_key_name = $this->get_meta_key($lang);
+        $query = $wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key = '%s' AND meta_value = '%s' AND term_id != %d ",
+                       $meta_key_name,
+                       $slug,
+                       $term->term_id);
+        $exists_slug = $wpdb->get_results($query);
 
-		if ( $wpdb->get_var( $query ) ) {
-			$num = 2;
-			do {
-				$alt_slug = $slug . "-$num";
-				$num++;
-				$slug_check = $wpdb->get_var( $wpdb->prepare(  "SELECT meta_value FROM $wpdb->termmeta WHERE meta_key = '$meta_key_name' AND meta_value = '$alt_slug'" ) );
-			} while ( $slug_check );
-			$slug = $alt_slug;
-		}
+        if ( empty($exists_slug) )
+            return $slug;
 
-		return $slug;
+        // If we didn't get a unique slug, try appending a number to make it unique.
+        $query = $wpdb->prepare(
+                    "SELECT meta_value FROM $wpdb->termmeta WHERE meta_key = '%s' AND meta_value = '%s' AND term_id != %d",
+                    $meta_key_name,
+                    $slug,
+                    $term->term_id);
+
+        if ( $wpdb->get_var( $query ) ) {
+            $num = 2;
+            do {
+                $alt_slug = $slug . "-$num";
+                $num++;
+                $slug_check = $wpdb->get_var(
+                                 $wpdb->prepare(
+                                "SELECT meta_value FROM $wpdb->termmeta WHERE meta_key = '%s' AND meta_value = '%s'",
+                                $meta_key_name,
+                                $alt_slug) );
+            } while ( $slug_check );
+            $slug = $alt_slug;
+        }
+
+        return $slug;
 	}
 	
 	
@@ -2229,13 +2246,30 @@ add_action('plugins_loaded', array($qtranslate_slug, 'init') );
 
 /**
  * Language Selector Code for templating
- * 
+ *
+ * @package Qtranslate Slug
+ * @subpackage Core 
  * @since 1.0
  */
-function qts_language_menu($type = "text", $args = array()) {
+function qts_language_menu ($type = "text", $args = array()) {
 	global $qtranslate_slug;
 	
 	$qtranslate_slug->language_menu($type, $args);
+}
+
+
+
+/**
+ * Adds support for old plugin function
+ * 
+ * @package Qtranslate Slug
+ * @subpackage Core
+ * @since 1.1.5
+ */
+function qTranslateSlug_getSelfUrl ($lang = false) {
+	global $qtranslate_slug;
+
+	return $qtranslate_slug->get_current_url($lang);
 }
 
 

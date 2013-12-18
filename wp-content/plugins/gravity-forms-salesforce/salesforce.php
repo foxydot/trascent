@@ -2,12 +2,12 @@
 /*
 Plugin Name: Gravity Forms Salesforce Web to Lead Add-On
 Description: Integrate <a href="http://formplugin.com?r=salesforce">Gravity Forms</a> with Salesforce - form submissions are automatically sent to your Salesforce account!
-Version: 2.2.4.2
+Version: 2.4.1
 Author: Katz Web Services, Inc.
 Author URI: http://www.katzwebservices.com
 
 ------------------------------------------------------------------------
-Copyright 2012 Katz Web Services, Inc.
+Copyright 2013 Katz Web Services, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,14 +33,14 @@ class GFSalesforceWebToLead {
     private static $path = "gravity-forms-salesforce/salesforce.php";
     private static $url = "http://www.gravityforms.com";
     private static $slug = "gravity-forms-salesforce";
-    private static $version = "2.2.4";
+    private static $version = "2.4.1";
     private static $min_gravityforms_version = "1.3.9";
 
     //Plugin starting point. Will load appropriate files
     public static function init(){
         global $pagenow;
 
-        if($pagenow === 'plugins.php') {
+        if($pagenow === 'plugins.php' && is_admin()) {
             add_action("admin_notices", array('GFSalesforceWebToLead', 'is_gravity_forms_installed'), 10);
         }
 
@@ -82,13 +82,15 @@ class GFSalesforceWebToLead {
         #add_action("gform_field_advanced_settings", array('GFSalesforceWebToLead',"add_salesforce_editor_field"), 10, 2); // For future use
 
         add_action("gform_editor_js", array('GFSalesforceWebToLead', 'add_form_option_js'), 10);
+        add_action("gform_properties_settings", array('GFSalesforceWebToLead', 'add_form_option_js'), 100);
+
 
         add_filter('gform_tooltips', array('GFSalesforceWebToLead', 'add_form_option_tooltip'));
 
         add_filter("gform_confirmation", array('GFSalesforceWebToLead', 'confirmation_error'));
     }
 
-     public static function is_gravity_forms_installed($asd = '', $echo = true) {
+    public static function is_gravity_forms_installed($asd = '', $echo = true) {
         global $pagenow, $page, $showed_is_gravity_forms_installed; $message = '';
 
         $installed = 0;
@@ -105,9 +107,11 @@ class GFSalesforceWebToLead {
 EOD;
             }
 
-            if(empty($showed_is_gravity_forms_installed)) {
-                echo '<div id="message" class="updated">'.$message.'</div>';
-                $showed_is_gravity_forms_installed = true;
+            if(!empty($message) && $echo && is_admin() && did_action( 'admin_notices' )) {
+                if(empty($showed_is_gravity_forms_installed)) {
+                    echo '<div id="message" class="updated">'.$message.'</div>';
+                    $showed_is_gravity_forms_installed = true;
+                }
             }
         } else {
             return true;
@@ -189,7 +193,9 @@ EOD;
         }
     }
 
-    public static function add_form_option_js() {
+    public static function add_form_option_js($location = 100) {
+        if($location !== 100) { return; }
+
         ob_start();
             gform_tooltip("form_salesforce");
             $tooltip = ob_get_contents();
@@ -217,7 +223,7 @@ EOD;
 <script type="text/javascript">
     jQuery(document).ready(function($) {
 
-        $('#gform_settings_tab_2 .gforms_form_settings').append("<li><input type='checkbox' id='gform_enable_salesforce' /> <label for='gform_enable_salesforce' id='gform_enable_salesforce_label'><?php _e("Enable Salesforce integration", "gravity-forms-salesforce") ?> <?php echo $tooltip; ?></label></li>");
+        $('#gform_settings_tab_2 .gforms_form_settings, #gform_tab_container_1').append("<li><input type='checkbox' id='gform_enable_salesforce' /> <label for='gform_enable_salesforce' id='gform_enable_salesforce_label'><?php _e("Enable Salesforce integration", "gravity-forms-salesforce") ?> <?php echo $tooltip; ?></label></li>");
 
         if($().prop) {
             $("#gform_enable_salesforce").prop("checked", form.enableSalesforce ? true : false);
@@ -237,22 +243,32 @@ EOD;
                 $("#gform_title .salesforce").remove();
             }
 
-            SortFields(); // Update the form object to include the new enableSalesforce setting
-
         }).trigger('ready');
 
-        $('.tooltip_form_salesforce').qtip({
-             content: $('.tooltip_form_salesforce').attr('tooltip'), // Use the tooltip attribute of the element for the content
-             show: { delay: 200, solo: true },
-             hide: { when: 'mouseout', fixed: true, delay: 200, effect: 'fade' },
-             style: 'gformsstyle', // custom tooltip style
-             position: {
-                corner: {
-                    target: 'topRight'
-                    ,tooltip: 'bottomLeft'
+        if($.qtip || $.fn.qtip) {
+            $('.tooltip_form_salesforce').qtip({
+                 content: $('.tooltip_form_salesforce').attr('tooltip'), // Use the tooltip attribute of the element for the content
+                 show: { delay: 200, solo: true },
+                 hide: { when: 'mouseout', fixed: true, delay: 200, effect: 'fade' },
+                 style: 'gformsstyle', // custom tooltip style
+                 position: {
+                    corner: {
+                        target: 'topRight'
+                        ,tooltip: 'bottomLeft'
+                    }
+                 }
+            });
+        } else {
+            // This is necessary because we're dynamically adding the tooltip via JS
+            jQuery( ".tooltip_form_salesforce" ).tooltip({
+                show: 500,
+                hide: 1000,
+                content: function () {
+                    return jQuery(this).prop('title');
                 }
-             }
-        });
+            });
+        }
+
     });
 </script><?php
     }
@@ -445,13 +461,16 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
             'sslverify' => false,
         );
 
+        $args = apply_filters( 'gf_salesforce_request_args', $args, $debug );
+
         $sub = $debug ? 'test' : 'www';
 
-#       echo '<pre>'; print_r($args); die();
+        $sub = apply_filters( 'gf_salesforce_request_subdomain', $sub, $debug );
 
         $result = wp_remote_post('https://'.$sub.'.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8', $args);
 
-        if(wp_remote_retrieve_response_code($result) !== 200) { // Server is down.
+        $code = wp_remote_retrieve_response_code($result);
+        if((int)$code !== 200) { // Server may be down.
             return array();
         } elseif(!isset($result['headers']['is-processed'])) { // For a valid debug test
             return $result;
@@ -509,12 +528,34 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
                 continue;
             }
 
-            if( is_array($field["inputs"]) ){
+            if( is_array(@$field["inputs"]) || is_array(@$field["choices"]) || $field['type'] === 'list'){
                 $valuearray = array();
-               //handling multi-input fields such as name and address
-               foreach($field["inputs"] as $inputKey => $input){
-                   $value = trim(rtrim(stripslashes(@$_POST["input_" . str_replace('.', '_', $input["id"])])));
-                   $label = self::getLabel($input["label"], $field, $input);
+                $fieldtemp = array();
+                $multi_input = true;
+
+                // set multi-input array to loop through
+                if ( is_array($field["inputs"])) {
+                    $fieldtemp = $field["inputs"];
+
+                }
+                else {
+                    $fieldtemp = isset($_POST["input_" . $field["id"]]) ? $_POST["input_" . $field["id"]] : '';
+                    $multi_input = false;
+                    $label = self::getLabel($field["label"], $field);
+                }
+
+               //handling multi-input fields such as name and address or choices
+               foreach((array)$fieldtemp as $inputKey => $input){
+                   //set the value and label
+                   if ($multi_input == true) {
+                       // inputs is an array
+                       $value = trim(rtrim(stripslashes(@$_POST["input_" . str_replace('.', '_', $input["id"])])));
+                       $label = self::getLabel($input["label"], $field, $input);
+                   } else {
+                       // choices is an array
+                       $value = $input;
+                   }
+
                    if(!$label) { $label = self::getLabel($field['label'], $field, $input); }
                    if ($label == 'BothNames' && !empty($value)) {
                         $names = explode(" ", $value);
@@ -535,20 +576,41 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
                         $salesforce = $value;
                    } else {
                         if(!empty($field['inputName']) && (apply_filters('gf_salesforce_use_inputname', true) === true)) {
-                            $valuearray["{$field['inputName']}"][] = $value;
+                            $valuearray["{$field['inputName']}"][] = (is_array($input) && isset($input["label"])) ? $input["label"] : $input;
                         } elseif(!empty($field['adminLabel']) && (apply_filters('gf_salesforce_use_adminlabel', true) === true)) {
                             $valuearray["{$field['adminLabel']}"][] = $value;
                         } elseif((!empty($data["{$label}"]) && !empty($value) && $value !== '0') || empty($data["{$label}"]) && array_key_exists("{$label}", $defaults)) {
-                            $data[$label] = $value ;
+                            $data[$label] = $value;
                         }
                    }
                }
+
+               // after looping through multi-input fields set the value
                if(isset($valuearray["{$field['adminLabel']}"])) {
-                    $data[$label] = implode(apply_filters('gf_salesforce_implode_glue', ', '), $valuearray["{$field['adminLabel']}"]);
+                    $data[$label] = implode(apply_filters('gf_salesforce_implode_glue', ';', $field), $valuearray["{$field['adminLabel']}"]);
+                    $data[$label] = preg_replace('/;+/', ';', $data[$label]); // Get rid of empty values
                } elseif(isset($valuearray["{$field['inputName']}"])) {
-                    $data[$label] = implode(apply_filters('gf_salesforce_implode_glue', ', '), $valuearray["{$field['inputName']}"]);
-               }
-           } else {
+                    $data[$label] = implode(apply_filters('gf_salesforce_implode_glue', ', ', $field), $valuearray["{$field['inputName']}"]);
+                    $data[$label] = str_replace(', ,', ',', $data[$label]); // Get rid of empty values
+                }
+
+           } else if ( 'survey' == $field[ 'type' ] && 'likert' == $field[ 'inputType' ] ) {
+
+                // handling likert field values for mapping properly
+                $value = trim( stripslashes( @$_POST[ "input_" . $field[ "id" ] ] ) );
+
+                foreach ( $field[ 'choices' ] as $choice ) {
+                    if ( $value == $choice[ 'value' ] ) {
+                        $value = $choice[ 'text' ];
+                        break;
+                    }
+                }
+
+                $label = self::getLabel($field["label"], $field);
+
+                $data[ $label ] = $value;
+
+            } else {
                //handling single-input fields such as text and paragraph (textarea)
                $value = trim(rtrim(stripslashes(@$_POST["input_" . $field["id"]])));
                $label = self::getLabel($field["label"], $field);
@@ -567,17 +629,28 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
                     $message = 'true';
                    $data['description'] = empty($data['description']) ? $value."\n" : $data['description']."\n".$value."\n";
                } else if($label == 'street') {
-                    $data['street'] .= $value."\n";
+                    $data['street'] = isset($data['street']) ? $data['street'].$value."\n" : $value."\n";
                } else if (trim(strtolower($label)) == 'salesforce' ) {
                     $salesforce = $value;
                } else {
+                    $field_name = null;
+
                     if(!empty($field['inputName']) && (apply_filters('gf_salesforce_use_inputname', true) === true)) {
-                        $data["{$field['inputName']}"] = $value ;
+                        $field_name = $field[ 'inputName' ];
                     } elseif(!empty($field['adminLabel']) && (apply_filters('gf_salesforce_use_adminlabel', true) === true)) {
-                        $data["{$field['adminLabel']}"] = $value ;
+                        $field_name = $field[ 'adminLabel' ];
                     } elseif((!empty($data["{$label}"]) && !empty($value) && $value !== '0') || empty($data["{$label}"]) && (array_key_exists("{$label}", $defaults) || apply_filters('gf_salesforce_use_custom_fields', true) === true)) {
-                        $data["{$label}"] = $value ;
-                   }
+                        $field_name = $label;
+                    }
+
+                    $field_name = apply_filters( 'gf_salesforce_mapped_field_name', $field_name, $field, $form_meta, $entry );
+
+                    $value = apply_filters( 'gf_salesforce_mapped_value_' . $field_name, $value, $field, $field_name, $form_meta, $entry );
+                    $value = apply_filters( 'gf_salesforce_mapped_value', $value, $field, $field_name, $form_meta, $entry );
+
+                    if ( null !== $field_name ) {
+                        $data["{$field_name}"] = $value;
+                    }
                }
            }
        }
@@ -593,6 +666,10 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
         $lead_source = isset($form_meta['title']) ? $form_meta['title'] : 'Gravity Forms Form';
         $data['lead_source'] = apply_filters('gf_salesforce_lead_source', $lead_source, $form_meta, $data);
         $data['debug']          = 0;
+        $data = array_map('stripslashes', $data);
+
+        // You can tap into the data and filter it.
+        $data = apply_filters( 'gf_salesforce_push_data', $data, $form_meta, $entry );
 
         $result = self::send_request($data);
 
@@ -770,12 +847,12 @@ For more information on custom fields, %sread this Salesforce.com Help Article%s
     }
 
     //Returns the url of the plugin's root folder
-    protected function get_base_url(){
+    protected static function get_base_url(){
         return plugins_url(null, __FILE__);
     }
 
     //Returns the physical path of the plugin's root folder
-    protected function get_base_path(){
+    protected static function get_base_path(){
         $folder = basename(dirname(__FILE__));
         return WP_PLUGIN_DIR . "/" . $folder;
     }

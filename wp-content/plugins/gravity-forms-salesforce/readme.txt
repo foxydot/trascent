@@ -1,10 +1,11 @@
 === Gravity Forms Salesforce Add-on ===
 Tags: gravity forms, forms, gravity, form, crm, gravity form, salesforce, salesforce plugin, form, forms, gravity, gravity form, gravity forms, secure form, simplemodal contact form, wp contact form, widget, sales force, customer, contact, contacts, address, addresses, address book
-Requires at least: 2.8
-Tested up to: 3.5.1
+Requires at least: 3.3
+Tested up to: 3.7.1
 Stable tag: trunk
 Contributors: katzwebdesign,katzwebservices
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Gravity%20Forms%20Salesforce%20Addon&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
+License: GPLv2 or later
 
 Integrate the remarkable Gravity Forms plugin with Salesforce.
 
@@ -62,6 +63,43 @@ If you have questions, comments, or issues with this plugin, <strong>please leav
 
 == Frequently Asked Questions ==
 
+= Web to Lead: My input values are being cut off in Salesforce =
+If you are submitting to a "Multi PickList" field in Salesforce, the values need to be separated with ';' instead of ','. Add a filter to your `functions.php` file:
+
+`
+add_filter('gf_salesforce_implode_glue', 'change_salesforce_implode_glue');
+
+/**
+ * Change the way the data is submitted to salesforce to force submission as multi picklist values.
+ * @param  string $glue  ',' or ';'
+ * @param  array $field The field to modify the glue for
+ * @return string        ',' or ';'
+ */
+function change_salesforce_implode_glue($glue, $field) {
+
+	// Change this to the Salesforce API Name of the field that's not being passed properly.
+	$name_of_sf_field = 'ExampleMultiSelectPicklist__c';
+
+	// If the field being checked is the Salesforce field that is being truncated, return ';'
+	if($field['inputName'] === $name_of_sf_field || $field['adminLabel'] === $name_of_sf_field) {
+		return ';';
+	}
+
+	// Otherwise, return default.
+	return $glue;
+}
+
+`
+
+= How do I modify the Soap, Proxy, WSDL and connection settings? =
+
+* `gf_salesforce_wsdl` - Path to the WSDL (string)
+* `gf_salesforce_proxy` - Proxy settings as an object with properties host, port (integer, not a string), login and password (object, ideally a `ProxySettings` object)
+* `gf_salesforce_soap_options` Additional options to send to the SoapClient constructor. (array) See <a href="http://php.net/manual/en/soapclient.soapclient.php">http://php.net/manual/en/soapclient.soapclient.php</a>
+* `gf_salesforce_connection` - Modify the `SforcePartnerClient` object before it's returned.
+
+See the FAQ item above for an example of using a filter.
+
 = Do I need both plugins activated? =
 No, you only need one, and the __API plugin is recommended__: the Web to Lead plugin is no longer being actively developed. __If you are using Web to Lead, you don't need the API plugin activated. If you are using the API plugin, you don't need the Web to Lead activated.__
 
@@ -100,9 +138,26 @@ function make_my_own_lead_source($lead_source, $form_meta, $data) {
 }
 `
 
+= My Assignment Rule is not triggered.  How do I fix this? = 
+
+`
+add_action('gf_salesforce_connection', 'gf_salesforce_set_default_assignement_rule');
+
+function gf_salesforce_set_default_assignement_rule($client) {
+    //  Two Options for Setting Assignment Rule
+    //    1.  Pass in AssignmentRule ID and "false" to use a specific assignment rule.
+    //    2.  Pass in null and true to trigger the DEFAULT AssignementRule
+    $header = new \AssignmentRuleHeader(null, true);
+
+    $client->setAssignmentRuleHeader($header);
+
+    return $client;
+}
+`
+
 = Can I use Salesforce Custom Fields? (Web to Lead) =
 
-With version 1.1, you can. When you are trying to map a custom field, you need to set either the "Admin Label" for the input (in the Advanced tab of each field in the  Gravity Forms form editor) or the Parameter Name (in Advanced tab, visible after checking "Allow field to be populated dynamically") to be the API Name of the Custom Field as shown in Salesforce. For example, a Custom Field with a Field Label "Web Source" could have an API Name of `SFGA__Web_Source__c`.
+You can. When you are trying to map a custom field, you need to set either the "Admin Label" for the input (in the Advanced tab of each field in the  Gravity Forms form editor) or the Parameter Name (in Advanced tab, visible after checking "Allow field to be populated dynamically") to be the API Name of the Custom Field as shown in Salesforce. For example, a Custom Field with a Field Label "Web Source" could have an API Name of `SFGA__Web_Source__c`.
 
 You can find your Custom Fields under [Your Name] &rarr; Setup &rarr; Leads &rarr; Fields, then at the bottom of the page, there's a list of "Lead Custom Fields & Relationships". This is where you will find the "API Name" to use in the Admin Label or Parameter Name.
 
@@ -110,6 +165,38 @@ You can find your Custom Fields under [Your Name] &rarr; Setup &rarr; Leads &rar
 This plugin is released under a GPL license.
 
 == Changelog ==
+
+= 2.4.1 =
+* Added more filters: `gf_salesforce_mapped_field_name`, `gf_salesforce_mapped_value`, `gf_salesforce_mapped_value_{$field_name}`. Thanks, @sc0ttkclark!
+
+= 2.4 =
+* Added filters to modify connection details. See the FAQ item "How do I modify the Soap, Proxy, WSDL and connection settings?"
+* Updated to latest Salesforce PHP Toolkit library
+
+= 2.3 & 2.3.1 & 2.3.2 =
+* API
+	* __Now fully supports custom objects!__
+	* Fixed error with endless spinning when choosing "Select the form to tap into"
+	* Fixed a few PHP notices
+	* Now supports line breaks in submitted content
+* Web to Lead
+	* Fixed <a href="http://wordpress.org/support/topic/form-editing-broken-with-saleforce-web-to-lead">issue</a> on Form Settings page caused by Gravity Forms 1.7.7 update.
+	* Now properly handles data with `'` and `"` - no longer adds slashes
+
+= 2.2.7 =
+* Updated Web to Lead
+	- Fixed Lists input type
+	- Fixed issue where checkboxes and multiselects were being added as Array
+
+= 2.2.6 =
+* Updated Web to Lead to work with Gravity Forms 1.7+ form settings screens
+
+= 2.2.5 =
+* Fixed Web to Lead picklist functionality. Thanks, <a href="http://d3vit.com/how-to-fix-gravity-forms-salesforce-plugin-picklist-multi-select/">Ryan Allen</a>!
+
+= 2.2.4.3 =
+* Fixed issue that should never have happened, but did: the "Gravity Forms Not Installed" message showed up for an user on the front-end of their site and prevented them from logging in.
+* Fixed admin PHP Notice when gravity forms is not activated
 
 = 2.2.4.2 =
 * Fixed one more issue with "Array" as submitted value when using select dropdown lists and Salesforce Field Mapping. *Note: after updating the plugin, you may need to re-save your affected forms.*
@@ -184,6 +271,38 @@ This plugin is released under a GPL license.
 * Launch!
 
 == Upgrade Notice ==
+
+= 2.4.1 =
+* Added more filters: `gf_salesforce_mapped_field_name`, `gf_salesforce_mapped_value`, `gf_salesforce_mapped_value_{$field_name}`. Thanks, @sc0ttkclark!
+
+= 2.4 =
+* Added filters to modify connection details. See the FAQ item "How do I modify the Soap, Proxy, WSDL and connection settings?"
+* Updated to latest Salesforce PHP Toolkit library
+
+= 2.3 & 2.3.1 & 2.3.2 =
+* API
+	* __Now fully supports custom objects!__
+	* Fixed error with endless spinning when choosing "Select the form to tap into"
+	* Fixed a few PHP notices
+	* Now supports line breaks in submitted content
+* Web to Lead
+	* Fixed <a href="http://wordpress.org/support/topic/form-editing-broken-with-saleforce-web-to-lead">issue</a> on Form Settings page caused by Gravity Forms 1.7.7 update.
+	* Now properly handles data with `'` and `"` - no longer adds slashes
+
+= 2.2.7 =
+* Updated Web to Lead
+	- Fixed Lists input type
+	- Fixed issue where checkboxes and multiselects were being added as Array
+
+= 2.2.6 =
+* Updated Web to Lead to work with Gravity Forms 1.7+ form settings screens
+
+= 2.2.5 =
+* Fixed Web to Lead picklist functionality. Thanks, <a href="http://d3vit.com/how-to-fix-gravity-forms-salesforce-plugin-picklist-multi-select/">Ryan Allen</a>!
+
+= 2.2.4.3 =
+* Fixed issue that should never have happened, but did: the "Gravity Forms Not Installed" message showed up for an user on the front-end of their site and prevented them from logging in.
+* Fixed admin PHP Notice when gravity forms is not activated
 
 = 2.2.4.2 =
 * Fixed one more issue with "Array" as submitted value when using select dropdown lists and Salesforce Field Mapping. *Note: after updating the plugin, you may need to re-save your affected forms.*
