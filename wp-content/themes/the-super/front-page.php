@@ -1,4 +1,8 @@
 <?php
+remove_action('genesis_after_header','msdlab_do_title_area');
+
+
+
 //remove sidebars (jsut in case)
 remove_all_actions('genesis_sidebar');
 remove_all_actions('genesis_sidebar_alt');
