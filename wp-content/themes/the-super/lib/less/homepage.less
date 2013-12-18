@@ -1,6 +1,20 @@
 @import 'lesshat';
 @import 'mixins';
 
+#hp-top{
+  display: block;
+  min-height: 300px;
+  border-top: 4px solid @ltgrey;
+  border-bottom: 4px solid @blue;
+  .slider-wrapper{
+    margin:0;
+    padding: 0;
+    .nivoSlider{
+      margin:0;
+      padding:0;
+    }
+  }
+}
 #hp-callout{
   .textwidget{
     .customsanserif;
@@ -14,17 +28,44 @@
   border:1px solid @ltgrey;
 }
 #homepage-widgets{
-  section.widget{
-    display: inline-block;
-    .widget-wrap{
-      background: @white;
-      padding:1.4rem;
+  .wrap{
+    .left{
+      padding: 0 10rem;
+      section.widget{
+        h4.widget-title{
+          margin: 0;
+          padding: 0;
+          color: @blue;
+          text-transform: uppercase;
+          font-weight: 400;
+          font-size: 36px;
+          font-size: 3.6rem;
+          span{
+            font-size: 24px;
+            font-size: 2.4rem;
+            color: @orange;
+            margin-bottom: 1rem;
+          }
+        }
+        ul{
+          border-top: 1px dotted @medgrey;
+          li{
+            border-bottom: 1px dotted @medgrey;
+          }
+          li:before{
+            font-family: "FontAwesome";
+            content: "\f041";
+            color: @blue;
+            margin-right: 0.5rem;
+          }
+        }
+        .readmore{
+          .button(@blue);
+          float: right;
+        }
+      }
     }
-  }
-  section.widget.first-child{
-    padding-left: 0;
-  }
-  section.widget.last-child{
-    padding-right: 0;
+    .right{
+    }
   }
 }

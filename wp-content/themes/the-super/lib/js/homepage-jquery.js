@@ -1,6 +1,4 @@
 jQuery(document).ready(function($) {
-	var numwidgets = $('#homepage-widgets section.widget').length;
-	$('#homepage-widgets').addClass('cols-'+numwidgets);
-	var cols = 12/numwidgets;
-	$('#homepage-widgets section.widget').addClass('col-md-'+cols);
+    $('.conferences .widget-title').prepend('<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-comments fa-stack-1x fa-inverse"></i></span>');
 });
+

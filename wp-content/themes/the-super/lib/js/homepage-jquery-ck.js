@@ -1,1 +1,1 @@
-jQuery(document).ready(function(e){var t=e("#homepage-widgets section.widget").length;e("#homepage-widgets").addClass("cols-"+t);var n=12/t;e("#homepage-widgets section.widget").addClass("col-md-"+n)});
+jQuery(document).ready(function(e){e(".conferences .widget-title").prepend('<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-comments fa-stack-1x fa-inverse"></i></span>')});
