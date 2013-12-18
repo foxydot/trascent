@@ -1,0 +1,70 @@
+@import 'reset';
+@import 'elements';
+@import 'mixins';
+
+#header {
+    margin: 0;
+}
+#content {
+	float: none;
+	padding: 0;
+	#home-footer.widget-area{
+		float: none;
+		clear: both;
+		.widget {
+			width: 247px;
+			height: 250px;
+			float: left;
+			margin-right:4px;
+			background:@ltgray;
+			.myriad;
+			.textwidget, .imagewidget {
+				padding: 0;
+				height: 250px;
+				.alignleft, .alignright {
+					margin: 0 10px 10px;
+				}
+				div.conference {
+					display: block;
+					clear: both;
+					margin-bottom: 1em;
+				}
+			}
+			.readmore {
+				position: absolute;
+				top: 190px;
+				width: 100%;
+			}
+			h4.widgettitle{
+				background: @ltblue;
+				color: #fff;
+				font-size: 20px;
+				margin-bottom: 12px;
+				font-weight: bold;
+				padding: 6px;
+				text-align: center;
+			}
+		}
+		.widget.orange{
+			h4.widgettitle{
+				background: @orange;
+			}
+		}
+		.widget.green{
+			h4.widgettitle{
+				background: @green;
+			}
+		}
+		.widget.dkblue{
+			h4.widgettitle{
+				background: @dkblue;
+			}
+		}
+		.widget.odd {
+			background:#fff;
+		}
+		.widget.last-child {
+			margin-right: 0;
+		}
+	}
+}

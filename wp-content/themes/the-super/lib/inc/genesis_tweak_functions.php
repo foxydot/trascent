@@ -138,6 +138,17 @@ function msdlab_add_legacy_sidebars(){
 /*** CONTENT ***/
 
 /**
+ * Move titles
+ */
+function msdlab_do_title_area(){
+    print '<div id="page-title-area" class="page-title-area">';
+    print '<div class="wrap">';
+    do_action('msdlab_title_area');
+    print '</div>';
+    print '</div>';
+}
+
+/**
  * Customize Breadcrumb output
  */
 function msdlab_breadcrumb_args($args) {
