@@ -174,7 +174,7 @@ function msdlab_grid_divider() {
  */
 function msdlab_do_social_footer(){
     global $msd_social;
-    if(has_nav_menu('footer_menu')){$copyright .= wp_nav_menu( array( 'theme_location' => 'footer_menu','container_class' => 'ftr-menu ftr-links','echo' => FALSE ) );}
+    if(has_nav_menu('footer_menu')){$social .= wp_nav_menu( array( 'theme_location' => 'footer_menu','container_class' => 'ftr-menu ftr-links','echo' => FALSE ) );}
     
     if($msd_social){
         $copyright .= '&copy; Copyright '.date('Y').' '.$msd_social->get_bizname().' &middot; All Rights Reserved';
@@ -182,8 +182,8 @@ function msdlab_do_social_footer(){
         $copyright .= '&copy; Copyright '.date('Y').' '.get_bloginfo('name').' &middot; All Rights Reserved ';
     }
     
-    print '<div id="copyright" class="copyright gototop">'.$copyright.'</div><div id="social" class="social creds">';
-    print '</div>';
+    print '<div id="social" class="social creds">'.$social.'</div>';
+    print '<div id="copyright" class="copyright gototop">'.$copyright.'</div>';
 }
 
 /**

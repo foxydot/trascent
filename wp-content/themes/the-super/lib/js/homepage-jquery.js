@@ -3,5 +3,7 @@ jQuery(document).ready(function($) {
     $('.white-papers .widget-icon i.fa').addClass('fa-file-text-o');
     $('.case-studies .widget-icon i.fa').addClass('fa-folder-o');
     $('.featured-article .widget-icon i.fa').addClass('fa-bookmark-o');
+    $('.right .readmore').after('<i class="fa fa-chevron-circle-right"></i>');
+
 });
 
