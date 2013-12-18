@@ -7,12 +7,25 @@
   border-top: 4px solid @ltgrey;
   border-bottom: 4px solid @blue;
   margin-bottom: 2rem;
-  .slider-wrapper{
-    margin:0;
-    padding: 0;
-    .nivoSlider{
-      margin:0;
-      padding:0;
+  .carousel{
+    margin-bottom: 0;
+    .item {
+      height: 300px;
+      .carousel-caption{
+        display: none;
+      }
+    }
+    .carousel-control{
+      font-size: 12.0rem;
+      width: 100px;
+      padding-top: 40px;      
+    }
+    .carousel-control:focus{
+      outline: none;
+    }
+    .carousel-control.right{
+      left: auto;
+      right: 0px;
     }
   }
 }

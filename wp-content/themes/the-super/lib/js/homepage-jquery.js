@@ -4,6 +4,6 @@ jQuery(document).ready(function($) {
     $('.case-studies .widget-icon i.fa').addClass('fa-folder-o');
     $('.featured-article .widget-icon i.fa').addClass('fa-bookmark-o');
     $('.right .readmore').after('<i class="fa fa-chevron-circle-right"></i>');
-
+    $('.carousel').carousel();
 });
 
