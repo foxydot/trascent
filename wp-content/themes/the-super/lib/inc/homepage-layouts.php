@@ -10,7 +10,7 @@ function msdlab_add_homepage_hero_flex_sidebars(){
     'id' => 'homepage-top'
             ));
     genesis_register_sidebar(array(
-    'name' => 'Homepage Widget Area',
+    'name' => 'Homepage Widgets Right',
     'description' => 'Homepage central widget areas',
     'id' => 'homepage-widgets'
             )); 
@@ -21,7 +21,7 @@ function msdlab_add_homepage_hero_flex_sidebars(){
  */
 function msdlab_add_homepage_callout_sidebars(){
     genesis_register_sidebar(array(
-    'name' => 'Homepage Callout',
+    'name' => 'Homepage Widgets Left',
     'description' => 'Homepage call to action',
     'id' => 'homepage-callout'
             ));

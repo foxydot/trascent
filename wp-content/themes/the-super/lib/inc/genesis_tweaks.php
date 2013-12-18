@@ -23,7 +23,6 @@ add_action( 'msdlab_pre_header', 'genesis_do_subnav' );
 
 //*** SIDEBARS ***/
 //add_action('genesis_before', 'msdlab_ro_layout_logic'); //This ensures that the primary sidebar is always to the left.
-add_action('after_setup_theme','msdlab_add_legacy_sidebars');
 add_filter('widget_text', 'do_shortcode');//shortcodes in widgets
 
 /*** CONTENT ***/
