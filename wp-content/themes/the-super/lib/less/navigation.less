@@ -51,7 +51,7 @@ Site Navigation
     padding: 16px 20px;
     padding: 1.6rem 2rem;
     position: relative;
-    width: 200px;
+    width: 196px;
   }
 }
 
@@ -127,13 +127,20 @@ Site Navigation
       text-transform: uppercase;
     }
     .sub-menu{
-      border: none;
+      border: 2px solid @ltgrey;
+      background-color: @white;
       li.menu-item{
+        background-color: @white;
         a{
-          background: darken(@dkgrey,20%);
+          background-color: none;
           border: none;
-          color: @orange;
+          color: @blue;
         }
+      }
+      li:hover>a{
+        background-color: @ltgrey;
+        color: @orange;
+        text-decoration: none;
       }
     }
   }
