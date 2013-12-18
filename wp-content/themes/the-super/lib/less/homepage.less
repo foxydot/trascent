@@ -6,6 +6,7 @@
   min-height: 300px;
   border-top: 4px solid @ltgrey;
   border-bottom: 4px solid @blue;
+  margin-bottom: 2rem;
   .slider-wrapper{
     margin:0;
     padding: 0;
@@ -14,6 +15,9 @@
       padding:0;
     }
   }
+}
+.site-inner{
+  display: none;
 }
 #hp-callout{
   .textwidget{
@@ -68,11 +72,14 @@
     .right{
       padding: 0;
       section.widget{
-        background-color: @ltgrey;
+        background-color: darken(@ltgrey,20%);
         margin-bottom: 10px;
         margin-bottom: 1rem;
         .widget-icon{
           border-right: 1px solid @white;
+          color: @white;
+          padding: 2rem 1rem;
+          text-align: center;
         }
         .widget-wrap{
           padding: 1rem;
