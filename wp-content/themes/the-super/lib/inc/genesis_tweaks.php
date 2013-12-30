@@ -33,7 +33,7 @@ remove_action('genesis_entry_header','genesis_do_post_title'); //move the title 
 add_action('msdlab_title_area','genesis_do_post_title');
 add_action('genesis_after_header','msdlab_do_title_area');
 add_action('genesis_before_content_sidebar_wrap', 'genesis_do_breadcrumbs'); //to outside of the loop area
-//add_action('genesis_before_entry','msd_post_image');//add the image above the entry
+add_action('genesis_before_entry','msd_post_image');//add the image above the entry
 
 remove_action( 'genesis_before_post_content', 'genesis_post_info' ); //remove the info (date, posted by,etc.)
 remove_action( 'genesis_after_post_content', 'genesis_post_meta' ); //remove the meta (filed under, tags, etc.)
