@@ -39,6 +39,7 @@ class MSD_Widget_Text extends WP_Widget {
 			<?php if ( !empty( $title ) ) { echo $before_title . $title . $after_title; } 
 			echo $instance['filter'] ? wpautop($text) : $text; 
 			if ( !empty( $url ) ) { echo '<div class="readmore"><span>'.$linktext.'</span></div>'; } ?>
+			<div class="clear"></div>
 		</div>
 		<?php
 		
