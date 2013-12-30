@@ -200,8 +200,8 @@ function msd_add_blog_header(){
     if(get_post_type() == 'post' || get_section()=='blog'){
         $header = '
         <div id="blog-header" class="blog-header">
-            <h3>Infinitive Difference Blog</h3>
-            <p>Get in the know and keep current with big-picture thinking and actionable insights.</p>
+            <h3></h3>
+            <p></p>
         </div>';
     }
     print $header;
