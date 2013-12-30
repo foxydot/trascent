@@ -161,6 +161,7 @@ Site Navigation
   .wrap{
     li.menu-item{
       width:auto;
+      position: relative;
       >a{
         font-size: 0.8em;
         line-height: 1.2em;
@@ -170,41 +171,33 @@ Site Navigation
       >a:hover{
         color:@orange;
       }
-      ul.sub-menu{
+      ul{
+        display: none;
         position:absolute;
         background:@ltgrey;
         text-align: center;
-        left: 0;
-        margin-top: 6px;
-        li.menu-item{
+        left: 20px;
+        z-index: 500;
+        li{
           border: 0;
-          border-right: 1px solid @orange;
-          display: inline-block;
-          background: none;
+          display: block;
           width: auto;
-          margin: 4px 0;
-          padding: 0 0.5rem 0 0;
           a{
             border: 0;
-            background: none;
             color: @dkgrey;
-            padding: 0.5rem;
             width: auto;
+            padding: 0 0 0 20px;
+            background-position: left center;
           }
         }
-      }
-    }
-    li.menu-item.icon-solutions{
-      >a{
-        padding: 0.5rem 7rem;
       }
     }
     li.menu-item.last-child{
       border: 0;
     }
-    li.hover{
-      a{
-        color:@white;
+    li:hover{
+      ul{
+        display: block;
       }
     }
   }

@@ -9,6 +9,7 @@ add_theme_support( 'custom-background' );//* Add support for custom background
 add_filter( 'genesis_search_text', 'msdlab_search_text' ); //customizes the serach bar placeholder
 add_filter('genesis_search_button_text', 'msdlab_search_button'); //customize the search form to add fontawesome search button.
 add_action('genesis_before_header','msdlab_pre_header');
+add_filter('genesis_do_subnav','good_advice_subnav_right',10,2);
 /*** NAV ***/
 /**
  * Move nav into header
