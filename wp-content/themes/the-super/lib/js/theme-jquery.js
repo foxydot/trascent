@@ -45,7 +45,8 @@ jQuery(document).ready(function($) {
     
     //icons
     $('.menu li[class*="icon-"]>a').prepend('<i></i>');
-    $('.widget .widget-title').append('<i class="fa fa-lg"></i>');
+    $('.widget.folder .widget-title').prepend('<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-folder fa-stack-1x fa-inverse"></i></span>');
+    $('.widget.document .widget-title').prepend('<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-file-text fa-stack-1x fa-inverse"></i></span>');
     $('.widget.featured-content .widget-title i').addClass('fa-rss');
 	
 });
