@@ -69,8 +69,8 @@ function copyright($address = TRUE){
 		$ret .= $this->msdsocial_get_address();
 		$ret .= $this->msdsocial_get_digits();
 	}
-	$ret .= 'Copyright &copy;'.date('Y').' ';
-	$ret .= $this->msdsocial_get_bizname();
+	$ret .= 'Copyright &copy;'.' ';
+	$ret .= $this->msdsocial_get_bizname().', '.date('Y');
 	print $ret;
 }
 
