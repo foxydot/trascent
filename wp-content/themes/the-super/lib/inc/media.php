@@ -60,9 +60,7 @@ function msd_bootstrap_carousel($atts){
         $active = $i==0?' active':'';
         $items .= '
         <div style="background: url('.$slide['image'].') center top no-repeat #000000;background-size: cover;" class="item'.$active.'">
-            <div class="carousel-caption">
-                '.$slide['content'].'
-            </div>
+           '.$slide['content'].'
         </div>';
         $i++;
     }
