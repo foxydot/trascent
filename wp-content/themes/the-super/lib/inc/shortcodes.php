@@ -50,3 +50,26 @@ function column_shortcode($atts, $content = null){
 }
 
 add_shortcode('columns','column_shortcode');
+
+function good_advice_sitemap() { 
+        $ret = '
+            <div class="archive-page">
+
+                <h4>'. _e( 'Pages:', 'genesis' ).'</h4>
+                <ul>
+                    '. wp_list_pages( 'sort_column=menu_order&title_li=' ).'
+                </ul>
+            </div><!-- end .archive-page-->
+
+            <div class="archive-page">
+
+                <h4>'. _e( 'Categories:', 'genesis' ).'</h4>
+                <ul>
+                    '. wp_list_categories( 'sort_column=name&title_li=' ).'
+                </ul>
+
+            </div><!-- end .archive-page-->';
+        return $ret;
+}
+
+add_shortcode('sitemap','good_advice_sitemap');
