@@ -103,7 +103,10 @@ function msdlab_breadcrumb_args($args) {
     $args['sep'] = ' > ';
     return $args;
 }
-
+function sp_post_info_filter($post_info) {
+    $post_info = '[post_date]';
+    return $post_info;
+}
 /**
  * Custom blog loop
  */

@@ -1,9 +1,5 @@
 <?php
-add_filter( 'genesis_post_info', 'sp_post_info_filter' );
-function sp_post_info_filter($post_info) {
-    $post_info = '[post_date]';
-    return $post_info;
-}
+
 global $wp_filter;
 //ts_var( $wp_filter['body_class'] );
 remove_action( 'genesis_entry_content', 'genesis_do_post_content' );
