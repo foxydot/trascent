@@ -46,5 +46,4 @@ add_action('genesis_before_loop','msdlab_category_header');
 function msdlab_category_header(){
     print category_description();
 }
-remove_action( 'genesis_entry_footer', 'genesis_post_meta' );
 genesis();
