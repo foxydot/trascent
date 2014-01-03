@@ -1,4 +1,6 @@
 <?php
+global $wp_filter;
+//ts_var( $wp_filter['genesis_before_footer'] );
 require_once('genesis_tweak_functions.php');
 /*** GENERAL ***/
 add_theme_support( 'html5' );//* Add HTML5 markup structure
@@ -46,8 +48,10 @@ add_action('template_redirect','msdlab_blog_grid');
 remove_action( 'genesis_entry_footer', 'genesis_post_meta' );
  
 /*** FOOTER ***/
-//add_theme_support( 'genesis-footer-widgets', 1 ); //adds automatic footer widgets
+add_theme_support( 'genesis-footer-widgets', 1 ); //adds automatic footer widgets
 
+remove_action('genesis_before_footer','genesis_footer_widget_areas',10);
+add_action('genesis_after_footer','genesis_footer_widget_areas');
 remove_action('genesis_footer','genesis_do_footer'); //replace the footer
 add_action('genesis_footer','msdlab_do_social_footer');//with a msdsocial support one
 
