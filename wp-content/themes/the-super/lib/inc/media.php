@@ -8,6 +8,13 @@ add_image_size( 'post-image', 760, 158, TRUE ); //image to float at the top of t
 add_image_size('tiny_thumb', 45, 45, TRUE);
 add_image_size('child_full', 730, 380, TRUE);
 add_image_size('child_thumbnail', 350, 170, TRUE);
+
+//* Display a custom favicon
+add_filter( 'genesis_pre_load_favicon', 'sp_favicon_filter' );
+function sp_favicon_filter( $favicon_url ) {
+    return get_stylesheet_directory_uri().'/lib/img/favicon.ico';
+}
+
 /**
  * Manipulate the featured image
  */
