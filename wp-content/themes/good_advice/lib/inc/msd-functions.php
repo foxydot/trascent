@@ -49,6 +49,13 @@ if(!function_exists('magic_reconnect')){
 		}
 	}
 }
+add_action('wp_head','jan_7_2014_redirect');
+function jan_7_2014_redirect(){
+    if(current_time( 'timestamp' )>1389099600){
+        print '<meta http-equiv="refresh" content="20; url=http://trascent.com/">';
+    }
+}
+
 add_filter('body_class','section_body_class');
 function section_body_class($classes) {
     global $post;
