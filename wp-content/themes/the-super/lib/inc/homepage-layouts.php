@@ -43,8 +43,10 @@ function msdlab_add_homepage_callout_sidebars(){
 function msdlab_hero(){
 	if(is_active_sidebar('homepage-top')){
 		print '<div id="hp-top">';
+        print '<div class="wrap">';
 		dynamic_sidebar('homepage-top');
-		print '</div>';
+        print '</div>';
+        print '</div>';
 	}
 }
 

@@ -4,34 +4,37 @@
 #hp-top{
   display: block;
   min-height: 300px;
-  border-top: 4px solid @ltgrey;
-  border-bottom: 4px solid @blue;
   margin-bottom: 2rem;
-  .carousel{
-    margin-bottom: 0;
-    .item {
-      height: 300px;
-      .sd2-node-caption {
-        display: none;
+  .wrap{
+    .carousel{
+      border-top: 4px solid @ltgrey;
+      border-bottom: 4px solid @blue;
+      margin: 0 auto;
+      width: 100%;
+      .item {
+        height: 300px;
+        .sd2-node-caption {
+          display: none;
+        }
+        .full-slide-link-hit-area{
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
       }
-      .full-slide-link-hit-area{
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
+      .carousel-control{
+        font-size: 12.0rem;
+        width: 100px;
+        padding-top: 40px;      
       }
-    }
-    .carousel-control{
-      font-size: 12.0rem;
-      width: 100px;
-      padding-top: 40px;      
-    }
-    .carousel-control:focus{
-      outline: none;
-    }
-    .carousel-control.right{
-      left: auto;
-      right: 0px;
+      .carousel-control:focus{
+        outline: none;
+      }
+      .carousel-control.right{
+        left: auto;
+        right: 0px;
+      }
     }
   }
 }
@@ -53,7 +56,7 @@
 #homepage-widgets{
   .wrap{
     .left{
-      padding: 0 10rem;
+      padding: 0 5rem;
       section.widget{
         h4.widget-title{
           margin: 0;
@@ -143,8 +146,11 @@
   /* Enter Your Custom Styles Here */ 
   #hp-top{
     min-height: 200px;
-   .carousel .item {
-    height: 200px;
+    .wrap{
+    min-height: 200px;
+     .carousel .item {
+      height: 200px;
+    }
   }
   .carousel-control{
     display: none;
@@ -158,9 +164,12 @@
   /* Enter Your Custom Styles Here */ 
   #hp-top{
     min-height: 150px;
-  .carousel .item {
-    height: 150px;
-  }  
+    .wrap{
+    min-height: 150px;
+    .carousel .item {
+      height: 150px;
+    }  
+  }
   }
 }
 
@@ -169,8 +178,11 @@
   /* Enter Your Custom Styles Here */ 
   #hp-top{
     min-height: 100px;
-  .carousel .item {
-    height: 100px;
+    .wrap{
+    min-height: 100px;
+    .carousel .item {
+      height: 100px;
+    }
   }
   }
 } 
