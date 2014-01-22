@@ -14,8 +14,8 @@ function msdlab_add_homepage_hero_flex_sidebars(){
     'description' => 'Homepage central widget areas',
     'id' => 'homepage-widgets',
     'before_widget' => genesis_markup( array(
-        'html5' => '<section id="%1$s" class="widget %2$s"><div class="widget-icon"><i class="fa fa-4x"></i></div><div class="widget-wrap">',
-        'xhtml' => '<div id="%1$s" class="widget %2$s"><div class="widget-icon"><i class="fa fa-4x"></i></div><div class="widget-wrap">',
+        'html5' => '<section id="%1$s" class="widget %2$s"><div class="widget-icon"><i class="fa fa-3x"></i></div><div class="widget-wrap">',
+        'xhtml' => '<div id="%1$s" class="widget %2$s"><div class="widget-icon"><i class="fa fa-3x"></i></div><div class="widget-wrap">',
         'echo'  => false,
     ) ),
     
