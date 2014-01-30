@@ -54,6 +54,14 @@ function category_body_class($classes) {
     return $classes;
 }
 
+if(function_exists('qtrans_getLanguage')){
+    add_filter('body_class','qtranslate_body_class');
+}
+function qtranslate_body_class($classes){
+    $current_language = qtrans_getLanguage();
+    $classes[] = 'language-'.$current_language;
+    return $classes;
+}
 // add classes for subdomain
 if(is_multisite()){
 	add_filter('body_class','subdomain_body_class');
