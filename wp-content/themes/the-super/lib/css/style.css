@@ -7195,6 +7195,11 @@ Site Footer
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
+.language-français .genesis-nav-menu .menu-item a,
+.language-deutsch .genesis-nav-menu .menu-item a {
+  padding: 20px 10px;
+  padding: 2rem 1rem;
+}
 .nav-responsive ul,
 .nav-responsive li,
 .nav-responsive li a {

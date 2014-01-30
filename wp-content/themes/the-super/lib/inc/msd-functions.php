@@ -58,7 +58,8 @@ if(function_exists('qtrans_getLanguage')){
     add_filter('body_class','qtranslate_body_class');
 }
 function qtranslate_body_class($classes){
-    $current_language = qtrans_getLanguage();
+    global $q_config;
+    $current_language = strtolower($q_config['language_name'][qtrans_getLanguage()]);
     $classes[] = 'language-'.$current_language;
     return $classes;
 }
