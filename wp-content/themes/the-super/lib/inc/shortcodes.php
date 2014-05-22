@@ -51,13 +51,34 @@ function column_shortcode($atts, $content = null){
 
 add_shortcode('columns','column_shortcode');
 
-function good_advice_sitemap() { 
+function good_advice_sitemap() {
+        //get exclusions based on Yoast SEO nofollow/noindex 
+        $args=array(
+          'post_type' => 'page',
+          'meta_key' => '_yoast_wpseo_meta-robots-noindex',
+          'meta_compare' => '=',
+          'meta_value' => '1'
+        );
+        $exclude_pages = get_posts($args); 
+        if($exclude_pages){
+            foreach ($exclude_pages as $ex) {
+                $exclude_ids[] = $ex->ID;
+            }
+            $exclude = implode(',', $exclude_ids);
+        } else {
+            $exclude = '';
+        }
+        $page_args = array(
+            'exclude' => $exclude,
+            'sort_order' => 'menu_order',
+            'title_li' => ''
+        );
         $ret = '
             <div class="archive-page">
 
                 <h4>'. _e( 'Pages:', 'genesis' ).'</h4>
                 <ul>
-                    '. wp_list_pages( 'sort_column=menu_order&title_li=' ).'
+                    '. wp_list_pages($page_args).'
                 </ul>
             </div><!-- end .archive-page-->
 
